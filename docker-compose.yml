@@ -1,0 +1,29 @@
+version: '2'
+services:
+#About node_modules.
+#By default I override local node_modules directory.
+#This is intended for working without installing dependencies by using development images.
+  
+#Bitcore Full Node
+  omnicore:
+    build: 
+      context: .
+    networks:
+      - omnicore   
+    ports:
+      - "18332:18332"
+    volumes:
+      - ./bitcoreroot/:/data/bitcoreroot
+    logging:
+        driver: json-file
+        options:
+           max-size: "50m"
+                        
+    restart: always
+    #for prod network > command: bitcore create mynode
+    command: "/data/omnicore/bin/omnicored -conf=/data/bitcoreroot/bitcore.conf -datadir=/data/bitcoreroot/data -testnet"
+
+
+networks:
+ omnicore:
+     driver: bridge
